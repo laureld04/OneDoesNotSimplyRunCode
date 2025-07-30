@@ -1,6 +1,8 @@
 # OneDoesNotSimplyRunCode
 Code and Containers Commonly Made or Used
 
+<insert funny coding meme here>
+
 Installation you will need for Linux on Windows
 -------------------------
 https://learn.microsoft.com/en-us/windows/wsl/install - WSL2 (for building containers and running linux-based commands)
