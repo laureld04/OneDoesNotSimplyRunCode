@@ -1,7 +1,7 @@
 # OneDoesNotSimplyRunCode
 Code and Containers Commonly Made or Used
 
-<insert funny coding meme here>
+"insert funny coding meme here"
 
 Installation you will need for Linux on Windows
 -------------------------
