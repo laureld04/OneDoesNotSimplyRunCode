@@ -11,4 +11,4 @@ https://github.com/QMICodeBase/TORTOISEV4?tab=readme-ov-file - TORTOISE containe
 
 Made in House
 ------------------------
-brkraw.recipe - brkraw made into a container for use on linux (testingon windows WSL2)
+brkraw.def - brkraw made into a container for use on linux (testingon windows WSL2)
