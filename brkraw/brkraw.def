@@ -1,0 +1,31 @@
+Bootstrap: docker
+From: continuumio/miniconda3
+
+%post
+    # Update and install system dependencies
+    apt-get update && apt-get install -y git
+
+    # Move to the /opt directory and clone the repository
+    cd /opt
+    git clone -b json_creation_fix https://www.github.com/araikes/brkraw.git
+    cd brkraw
+
+    # Install dependencies using pip
+    /opt/conda/bin/pip install --upgrade pip
+    /opt/conda/bin/pip install SimpleITK pandas==1.5.3
+
+    # Install brkraw package
+    /opt/conda/bin/pip install .
+
+%environment
+    # Set environment variables
+    export PATH=/opt/conda/bin:$PATH
+
+%runscript
+    # Default behavior when running the container
+    echo "This is a Singularity container with brkraw installed."
+    exec /bin/bash
+
+%test
+    # Basic test to check installation
+    python -c "import SimpleITK, pandas, brkraw; print('Dependencies installed successfully.')"
