@@ -8,3 +8,7 @@ https://learn.microsoft.com/en-us/windows/wsl/install - WSL2 (for building conta
 Docker Related Containers
 -------------------------
 https://github.com/QMICodeBase/TORTOISEV4?tab=readme-ov-file - TORTOISE container
+
+Made in House
+------------------------
+brkraw.recipe - brkraw made into a container for use on linux (testingon windows WSL2)
