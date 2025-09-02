@@ -1,0 +1,76 @@
+# --------------------------
+# Dockerfile for ANTs 2.3.1 with local ITKv5 v5.3.0
+# --------------------------
+
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV ANTSPATH=/opt/ANTs/ANTs-install/bin
+
+# --------------------------
+# Install build tools and required dev libraries
+# --------------------------
+RUN apt-get update && apt-get install -y \
+    g++ \
+    make \
+    cmake \
+    wget \
+    tar \
+    git \
+    zlib1g-dev \
+    libpng-dev \
+    libtiff-dev \
+    libexpat1-dev \
+    libxt-dev \
+    libfftw3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Upgrade CMake to >= 3.22 (required by ITKv5)
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9-linux-x86_64.sh -O /tmp/cmake.sh && \
+    chmod +x /tmp/cmake.sh && \
+    /tmp/cmake.sh --skip-license --prefix=/usr/local && \
+    rm /tmp/cmake.sh
+
+# --------------------------
+# Copy local sources into container
+# --------------------------
+WORKDIR /opt/ANTs
+COPY ANTs-2.3.1.tar.gz /opt/ANTs/
+COPY ITKv5 /opt/ANTs/ITKv5
+
+# --------------------------
+# Extract ANTs
+# --------------------------
+RUN tar -xzf ANTs-2.3.1.tar.gz && rm ANTs-2.3.1.tar.gz
+
+# --------------------------
+# Build ITKv5 offline
+# --------------------------
+WORKDIR /opt/ANTs/ITKv5
+RUN mkdir build && cd build && \
+    cmake -DCMAKE_INSTALL_PREFIX=/opt/ANTs/ITKv5-install \
+          -DBUILD_TESTING=OFF \
+          -DITK_USE_SYSTEM_FFTW=OFF \
+          -DITK_USE_SYSTEM_KWSTYLE=OFF \
+          -DITK_USE_EXTERNAL_DATA=OFF \
+          .. && \
+    make -j2 && \
+    make install
+
+# --------------------------
+# Build ANTs 2.3.1 using local ITKv5
+# --------------------------
+WORKDIR /opt/ANTs/ANTs-2.3.1
+RUN mkdir build && cd build && \
+    cmake -DCMAKE_INSTALL_PREFIX=/opt/ANTs/ANTs-install \
+          -DITK_DIR=/opt/ANTs/ITKv5-install/lib/cmake/ITK-5.3 \
+          -DANTs_USE_EXAMPLES=OFF \
+          -DBUILD_TESTING=OFF \
+          ../ && \
+    make -j2 && \
+    make install
+
+# --------------------------
+# Set environment
+# --------------------------
+ENV PATH="$ANTSPATH:$PATH"
